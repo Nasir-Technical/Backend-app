@@ -1,17 +1,11 @@
+// models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-});
-
-// Password ko hash karne ka middleware
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+  role: { type: String, enum: ['user', 'admin'], default: 'user' } // role field added
 });
 
 module.exports = mongoose.model('User', userSchema);
